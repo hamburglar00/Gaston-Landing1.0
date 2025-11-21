@@ -2,7 +2,7 @@
 module.exports = async (req, res) => {
   try {
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbyzh68zHkODoICkVFK774sIRgbRCALuhGqlCrLYpEW5r9-3xcocWE57L5q_Em6u3MMn_w/exec";
+      "https://script.google.com/macros/s/AKfycbxK8_zXng5xPyYoN34aj3GqHrftgL4Sa_FCj6yXpG-JQepfiEUgXXYnLc26lRMl3jGsvA/exec";
 
     const response = await fetch(API_URL, {
       headers: { "Cache-Control": "no-store" }
