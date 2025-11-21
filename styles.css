@@ -74,7 +74,10 @@ body {
   gap: 8px;          /* antes 10px */
   min-width: 180px;  /* antes 250px */
   /* Sombra estática (no animarla: costosa) */
-  box-shadow: 0 0 30px 8px #8b00ff, inset 0 1px 0 #ffffff33, 0 0 12px 2px #5a00b599;
+  box-shadow:
+  0 0 25px 6px rgba(255, 230, 0, 0.9),  /* glow principal amarillo */
+  inset 0 1px 0 rgba(255,255,255,0.25), /* brillo interno suave */
+  0 0 12px 3px rgba(255, 180, 0, 0.8);   /* halo cálido */
   /* Solo animaciones composited */
   animation: heartbeat 2s infinite ease-in-out;
   transition: transform 0.3s ease-in-out;
