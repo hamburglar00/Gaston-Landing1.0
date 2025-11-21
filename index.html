@@ -81,7 +81,7 @@
       </div>
     </div>
 
-    <!-- Script WhatsApp con utm_campaign -> "Prefijo-UTM" -->
+    <!-- Script WhatsApp con número dinámico desde backend -->
     <script>
       // === Configurá tu prefijo acá ===
       const LANDING_PREFIX = ""; // Cambiá si querés otro prefijo
@@ -115,13 +115,35 @@
         return getQueryParam("utm_campaign") || localStorage.getItem("utm_campaign") || "ORG";
       }
 
-      document.getElementById("whatsappButton").addEventListener("click", function () {
-        const numeros = [
-          "549351", // 
-          "549351"  // 
-        ];
-        
-        const telefono = numeros[Math.floor(Math.random() * numeros.length)];
+      // 🔁 Obtiene un número dinámico desde /api/get-random-phone
+      async function obtenerNumeroWhatsApp() {
+        try {
+          const res = await fetch("/api/get-random-phone", {
+            headers: { "Cache-Control": "no-store" }
+          });
+
+          if (!res.ok) throw new Error("HTTP " + res.status);
+
+          const data = await res.json();
+          const raw = (data && data.number) ? String(data.number).trim() : null;
+          if (!raw) throw new Error("Número vacío");
+
+          // Quitamos '+' por las dudas
+          return raw.replace("+", "");
+        } catch (err) {
+          console.error("❌ Error obteniendo número dinámico, usando fallback:", err);
+
+          // Fallback ultra básico (ya casi no se usa si el backend anda)
+          const fallback = [
+            "5493510000000"
+          ];
+          return fallback[Math.floor(Math.random() * fallback.length)];
+        }
+      }
+
+      document.getElementById("whatsappButton").addEventListener("click", async function () {
+        // ✅ Traemos número dinámico
+        const telefono = await obtenerNumeroWhatsApp();
 
         const utm = normalizeUtm(getUTMCampaign());
         const codigo = `${LANDING_PREFIX}-${utm}`;
@@ -179,7 +201,7 @@
         ];
 
         const mensajeBase = variantes[Math.floor(Math.random() * variantes.length)];
-        const mensaje = mensajeBase;
+        const mensaje = mensajeBase; // si querés podés agregar el código: `${mensajeBase} (${codigo})`
         const link = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
 
         // 🔵 Evento estándar "Contact" por código
