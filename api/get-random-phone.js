@@ -14,8 +14,8 @@ module.exports = async (req, res) => {
 
     if (list.length === 0) {
       return res.status(200).json({
-        number: "5493510000000",
-        name: "Fallback"
+        number: "5493512593353",
+        name: "Gaston"
       });
     }
 
@@ -26,8 +26,8 @@ module.exports = async (req, res) => {
   } catch (e) {
     console.error("❌ Error:", e);
     return res.status(200).json({
-      number: "5493510000000",
-      name: "Fallback"
+      number: "5493512593353",
+      name: "Gaston"
     });
   }
 };
