@@ -1,187 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>REYDEASES</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="./styles.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>REYDEASES</title>
 
-    <!-- Performance Meta Pixel -->
-    <link rel="preconnect" href="https://connect.facebook.net" crossorigin />
-    <link rel="dns-prefetch" href="//connect.facebook.net" />
-    <link rel="preload" as="image" href="imagenes/fondo.png" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="./styles.css" />
 
-    <!-- Meta Pixel Code (con coincidencias avanzadas) -->
-    <script>
-      function getQS(name){ 
-        const u=new URLSearchParams(location.search); 
-        return u.get(name)||null;
-      }
+  <!-- Pixel -->
+  <script>
+    function getQS(n){return new URLSearchParams(location.search).get(n)}
+    function normEmail(v){return (v||"").trim().toLowerCase()}
+    function normPhone(v){let p=(v||"").replace(/\D+/g,"");if(p&&p.length===10)p="54"+p;return p;}
+    function getOrCreateExternalId(){
+      let id=localStorage.getItem("external_id");
+      if(!id){id=crypto.randomUUID();localStorage.setItem("external_id",id);}
+      return id;
+    }
 
-      function normEmail(v){ return (v||"").trim().toLowerCase(); }
+    const userEmail  = normEmail(getQS("em") || localStorage.getItem("em") || "");
+    const userPhone  = normPhone(getQS("ph") || localStorage.getItem("ph") || "");
+    const externalId = getOrCreateExternalId();
 
-      function normPhone(v){
-        let p=(v||"").replace(/\D+/g,"");
-        if(p && p.length===10) p="54"+p;
-        return p;
-      }
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){
+      n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)
+    };
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
 
-      function getOrCreateExternalId(){
-        const k="external_id";
-        let id=localStorage.getItem(k);
-        if(!id){
-          id=(crypto?.randomUUID?.()) 
-             || (Date.now()+"-"+Math.random().toString(16).slice(2));
-          localStorage.setItem(k,id);
-        }
-        return id;
-      }
+    fbq("init","1148454560830408",{
+      external_id: externalId,
+      em: userEmail || undefined,
+      ph: userPhone || undefined,
+      country:"AR"
+    });
 
-      const userEmail  = normEmail( getQS("em") || localStorage.getItem("em") || "" );
-      const userPhone  = normPhone( getQS("ph") || localStorage.getItem("ph") || "" );
-      const externalId = getOrCreateExternalId();
+    fbq("track","PageView");
+  </script>
 
-      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(
-        window, document,'script','https://connect.facebook.net/en_US/fbevents.js'
-      );
+</head>
 
-      fbq('init','1148454560830408',{
-        external_id: externalId,
-        em: userEmail || undefined,
-        ph: userPhone || undefined,
-        country: 'AR'
-      });
+<body>
+  <div class="container background-image">
+    <div class="overlay"></div>
+    <div class="content">
 
-      fbq('track','PageView');
-    </script>
+      <img src="imagenes/logo.png" class="logo" width="240" height="120"
+           alt="ReyDeAses" decoding="async" fetchpriority="high" />
 
-    <noscript>
-      <img height="1" width="1" style="display:none"
-           src="https://www.facebook.com/tr?id=1148454560830408&ev=PageView&noscript=1"/>
-    </noscript>
-  </head>
+      <p class="title">Envianos un WhatsApp<br />para crear tu cuenta</p>
 
-  <body>
-    <div class="container background-image">
-      <div class="overlay"></div>
+      <a class="whatsapp-button" id="whatsappButton">
+        <span>¡Contactá ya!</span>
+        <img src="imagenes/whatsapp.png" class="whatsapp-icon" width="24" height="24" />
+      </a>
 
-      <div class="content">
-        <img src="imagenes/logo.png" class="logo" width="240" height="120"
-             alt="Rey de Ases" decoding="async" fetchpriority="high" />
+      <p class="subtitle">Mínimo de carga 2.000<br />Sin Cronogramas<br />Ganás y cobrás a cualquier hora</p>
+      <p class="description">RED OFICIAL: REY DE ASES</p>
 
-        <p class="title">Envianos un WhatsApp<br />para crear tu cuenta</p>
-
-        <a class="whatsapp-button" id="whatsappButton">
-          <span>¡Contactá ya!</span>
-          <img src="imagenes/whatsapp.png" alt="WhatsApp"
-               class="whatsapp-icon" width="24" height="24" decoding="async" loading="lazy" />
-        </a>
-
-        <p class="subtitle">
-          Mínimo de carga 2.000<br />
-          Sin Cronogramas<br />
-          Ganás y cobrás a cualquier hora
-        </p>
-
-        <p class="description">RED OFICIAL: REY DE ASES</p>
-      </div>
     </div>
+  </div>
 
-    <!-- ============================================================
-         WHATSAPP + NÚMERO DINÁMICO DESDE BACKEND
-         ============================================================ -->
-    <script>
-      /* ================================
-         UTM persistente
-      =================================*/
-      const LANDING_PREFIX = "";
+<script>
+/* =============================================================
+    📌 CONFIG CACHE
+============================================================= */
+const CACHE_KEY = "wa_numbers_cache_rey";
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
 
-      function getQueryParam(name) {
-        const params = new URLSearchParams(window.location.search);
-        const v = params.get(name);
-        return v ? decodeURIComponent(v) : null;
-      }
+/* =============================================================
+    📌 CARGA NÚMEROS DESDE CACHE O BACKEND
+============================================================= */
+async function getActiveNumbers() {
+  // 1) ¿Hay cache válido?
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+    if (cached && (Date.now() - cached.ts) < CACHE_TTL && cached.list.length > 0) {
+      return cached.list;
+    }
+  } catch {}
 
-      function normalizeUtm(v) {
-        return String(v || "")
-          .trim()
-          .replace(/\s+/g, "_")
-          .replace(/[^A-Za-z0-9_-]/g, "")
-          || "ORG";
-      }
+  // 2) Si no hay cache → consulta backend
+  try {
+    const res = await fetch("/api/get-random-phone", {
+      headers: { "Cache-Control": "no-store" }
+    });
 
-      (function persistUTM() {
-        const found = getQueryParam("utm_campaign");
-        if (found) localStorage.setItem("utm_campaign", found);
-      })();
+    const data = await res.json();
 
-      function getUTMCampaign() {
-        return getQueryParam("utm_campaign")
-            || localStorage.getItem("utm_campaign")
-            || "ORG";
-      }
+    let list = [];
 
-      /* ==========================================
-         GET RANDOM NUMBER FROM BACKEND
-      ===========================================*/
-      async function obtenerNumeroWhatsApp() {
-        try {
-          const res = await fetch("/api/get-random-phone", {
-            headers: { "Cache-Control":"no-store" }
-          });
+    if (Array.isArray(data)) list = data;
+    else if (Array.isArray(data.numbers)) list = data.numbers;
+    else list = [data];
 
-          if (!res.ok) throw new Error("HTTP "+res.status);
+    // Normalización
+    list = list
+      .filter(it => it.number)
+      .map(it => ({
+        number: String(it.number).replace("+","").trim(),
+        name: it.name || "Soporte"
+      }));
 
-          const data = await res.json();
-          const raw = data?.number ? String(data.number).trim() : null;
+    if (!list.length) throw new Error("vacío");
 
-          if (!raw) throw new Error("Número vacío");
-          return raw.replace("+","");
-        }
-        catch(err){
-          console.error("❌ Error dinámico, fallback:", err);
-          return "5493512593353";
-        }
-      }
+    // Guardamos cache
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      ts: Date.now(),
+      list
+    }));
 
-      /* ==========================================
-         CLICK BOTÓN WHATSAPP
-      ===========================================*/
-      document.getElementById("whatsappButton")
-        .addEventListener("click", async function () {
+    return list;
+  } catch (err) {
+    console.error("Fallback por error:", err);
 
-        const telefono = await obtenerNumeroWhatsApp();
+    return [{
+      number: "5493510000000",
+      name: "Soporte"
+    }];
+  }
+}
 
-        const variantes = [
-          `¡Hola! Vi este anuncio, ¿me pasás info?`,
-          `Hola! Vi el anuncio, ¿podés darme más info?`,
-          `Buenas! ¿Me contás un poco más del anuncio?`,
-          `Hola! Quisiera saber más sobre lo que ofrecen.`,
-          `Buenas! ¿Me das más detalles, por favor?`,
-          `Hola! Estoy interesado/a, ¿cómo funciona todo?`,
-          `Hola! Vi tu publicación, ¿podrías ampliarme la info?`,
-          `Buenas! ¿Me podrías pasar información?`,
-          `Hola! Estoy viendo el anuncio, ¿me das más datos?`,
-          `Buenas! Me interesa, ¿podrías contarme más?`
-        ];
+/* =============================================================
+    📌 VARIANTES (con nombre dinámico)
+============================================================= */
+function variantesMensaje(nombre){
+  const arr = [
+    n => `¡Hola ${n}! Vi este anuncio, ¿me pasás info?`,
+    n => `Hola ${n}! Vi el anuncio, ¿podés darme más info?`,
+    n => `Buenas ${n}! ¿Me contás un poco más del anuncio?`,
+    n => `Hola ${n}! Quisiera saber más sobre lo que ofrecen.`,
+    n => `Buenas ${n}! ¿Me das más detalles, por favor?`,
+    n => `Hola ${n}! Estoy interesado/a, ¿cómo funciona todo?`,
+    n => `Holaaa ${n}! Me llamó la atención, ¿me contás más?`,
+    n => `Hola ${n}! ¿Cómo hago para empezar?`,
+    n => `Buenas ${n}! Me das información para arrancar?`,
+    n => `Hola ${n}! Me podrías pasar datos?`
+  ];
+  return arr[Math.floor(Math.random()*arr.length)](nombre);
+}
 
-        const mensaje = variantes[Math.floor(Math.random()*variantes.length)];
+/* =============================================================
+    📌 CLICK WHATSAPP (ultra instantáneo)
+============================================================= */
+document.getElementById("whatsappButton").addEventListener("click", async () => {
 
-        if (window.fbq) {
-          fbq('track','Contact',{
-            content_name:'CTA WhatsApp',
-            content_category:'LeadGen'
-          });
-        }
+  const list = await getActiveNumbers();     // ← instantáneo si hay cache
+  const chosen = list[Math.floor(Math.random()*list.length)];
 
-        const link = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-        setTimeout(()=> window.open(link,"_blank","noopener"),200);
-      });
-    </script>
+  const phone  = chosen.number;
+  const nombre = chosen.name || "Soporte";
 
-  </body>
+  const mensaje = variantesMensaje(nombre);
+
+  if(window.fbq){
+    fbq("track","Contact",{content_name:"CTA WhatsApp"});
+  }
+
+  // Redirige ya!
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`,
+              "_blank","noopener");
+});
+
+</script>
+</body>
 </html>
