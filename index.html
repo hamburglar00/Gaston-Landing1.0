@@ -67,24 +67,22 @@
 
 <script>
 /* =============================================================
-    📌 CONFIG CACHE
+    CACHE LOCAL 5 MINUTOS
 ============================================================= */
 const CACHE_KEY = "wa_numbers_cache_rey";
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+const CACHE_TTL = 5 * 60 * 1000;
 
 /* =============================================================
-    📌 CARGA NÚMEROS DESDE CACHE O BACKEND
+    TRAE LISTA DESDE BACKEND O CACHE
 ============================================================= */
 async function getActiveNumbers() {
-  // 1) Cache
   try {
-    const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
-    if (cached && (Date.now() - cached.ts) < CACHE_TTL && cached.list.length > 0) {
-      return cached.list;
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY));
+    if (c && (Date.now() - c.ts) < CACHE_TTL && c.list.length) {
+      return c.list;
     }
   } catch {}
 
-  // 2) Backend
   try {
     const res = await fetch("/api/get-random-phone", {
       headers: { "Cache-Control": "no-store" }
@@ -97,7 +95,6 @@ async function getActiveNumbers() {
     else if (Array.isArray(data.numbers)) list = data.numbers;
     else list = [data];
 
-    // Normalización
     list = list
       .filter(it => it.number)
       .map(it => ({
@@ -107,25 +104,21 @@ async function getActiveNumbers() {
 
     if (!list.length) throw new Error("vacío");
 
-    // Guardamos cache
     localStorage.setItem(CACHE_KEY, JSON.stringify({
       ts: Date.now(),
       list
     }));
 
     return list;
-  } catch (err) {
-    console.error("Fallback por error:", err);
 
-    return [{
-      number: "5493512593353",
-      name: "Soporte"
-    }];
+  } catch (err) {
+    console.error("fallback:", err);
+    return [{ number:"5493512593353", name:"Soporte" }];
   }
 }
 
 /* =============================================================
-    📌 VARIANTES (con nombre dinámico)
+    VARIANTES DE MENSAJE
 ============================================================= */
 function variantesMensaje(nombre){
   const arr = [
@@ -135,24 +128,21 @@ function variantesMensaje(nombre){
     n => `Hola ${n}! Quisiera saber más sobre lo que ofrecen.`,
     n => `Buenas ${n}! ¿Me das más detalles, por favor?`,
     n => `Hola ${n}! Estoy interesado/a, ¿cómo funciona todo?`,
-    n => `Holaaa ${n}! Me llamó la atención, ¿me contás más?`,
-    n => `Hola ${n}! ¿Cómo hago para empezar?`,
-    n => `Buenas ${n}! Me das información para arrancar?`,
-    n => `Hola ${n}! Me podrías pasar datos?`
+    n => `Holaaa ${n}! Me llamó la atención, ¿me contás más?`
   ];
   return arr[Math.floor(Math.random()*arr.length)](nombre);
 }
 
 /* =============================================================
-    📌 CLICK WHATSAPP (ultra instantáneo)
+    CLICK WHATSAPP
 ============================================================= */
 document.getElementById("whatsappButton").addEventListener("click", async () => {
 
-  const list = await getActiveNumbers();     // ← instantáneo si hay cache
+  const list = await getActiveNumbers();
   const chosen = list[Math.floor(Math.random()*list.length)];
 
   const phone  = chosen.number;
-  const nombre = chosen.name || "Soporte";
+  const nombre = chosen.name;
 
   const mensaje = variantesMensaje(nombre);
 
@@ -160,7 +150,6 @@ document.getElementById("whatsappButton").addEventListener("click", async () => 
     fbq("track","Contact",{content_name:"CTA WhatsApp"});
   }
 
-  // 🚀 Redirige INSTANTÁNEO
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`,
               "_blank","noopener");
 });
