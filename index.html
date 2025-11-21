@@ -76,7 +76,7 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
     📌 CARGA NÚMEROS DESDE CACHE O BACKEND
 ============================================================= */
 async function getActiveNumbers() {
-  // 1) ¿Hay cache válido?
+  // 1) Cache
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
     if (cached && (Date.now() - cached.ts) < CACHE_TTL && cached.list.length > 0) {
@@ -84,7 +84,7 @@ async function getActiveNumbers() {
     }
   } catch {}
 
-  // 2) Si no hay cache → consulta backend
+  // 2) Backend
   try {
     const res = await fetch("/api/get-random-phone", {
       headers: { "Cache-Control": "no-store" }
@@ -93,7 +93,6 @@ async function getActiveNumbers() {
     const data = await res.json();
 
     let list = [];
-
     if (Array.isArray(data)) list = data;
     else if (Array.isArray(data.numbers)) list = data.numbers;
     else list = [data];
@@ -161,11 +160,10 @@ document.getElementById("whatsappButton").addEventListener("click", async () => 
     fbq("track","Contact",{content_name:"CTA WhatsApp"});
   }
 
-  // Redirige ya!
+  // 🚀 Redirige INSTANTÁNEO
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`,
               "_blank","noopener");
 });
-
 </script>
 </body>
 </html>
